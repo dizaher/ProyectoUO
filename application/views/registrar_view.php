@@ -27,87 +27,71 @@
 							FORMATO DE REGISTRO ULTIMA OPORTUNIDAD
 						</div>
 						<div class="panel-body">							
-							<?php echo form_open('registroUO'); ?>
-          						<?php echo validation_errors('<div class="alert alert-error">', '</div>'); ?>
+							<?php echo form_open('registroUO/registro'); ?>          						
 								<div class="row">
 									<div class="col-md-6 col-sm-6">
 										<div class="form-group">
-											<label for="exampleInputEmail1">Matricula</label>
-											<input type="text" class="form-control" name="matricula" />
+											<?php echo form_error('matricula' ); ?>
+											<label for="exampleInputMatricula">Matricula</label>
+											<input type="text" class="form-control" id="error" name="matricula" value="<?php echo set_value('matricula'); ?>" />
 										</div>
 										<div class="form-group">
-											<label for="exampleInputEmail1">Nombre</label>
-											<input type="text" class="form-control" name="nombre" />
+											<?php echo form_error('nombre'); ?>
+											<label for="exampleInputNombre">Nombre</label>
+											<input type="text" class="form-control" name="nombre" value="<?php echo set_value('nombre'); ?>"/>
 										</div>
 										<div class="form-group">
-											<label for="exampleInputEmail1">Apellido Paterno</label>
-											<input type="text" class="form-control" name="paterno" />
+											<?php echo form_error('paterno'); ?>
+											<label for="exampleInputApellidoPat">Apellido Paterno</label>
+											<input type="text" class="form-control" name="paterno" value="<?php echo set_value('paterno'); ?>"/>
 										</div>
 										<div class="form-group">
-											<label for="exampleInputEmail1">Apellido Materno</label>
-											<input type="text" class="form-control" name="materno"/>
+											<?php echo form_error('materno'); ?>
+											<label for="exampleInputApellidoMat">Apellido Materno</label>
+											<input type="text" class="form-control" name="materno" value="<?php echo set_value('materno'); ?>"/>
 										</div>
+
 										<div class="form-group">
-		                                    <label>Carrera</label>
-		                                    <select name="programa" class="form-control">
-												 <?php						  
-												    foreach ($resPrograma as $rp) {				    	
-														?>  
-														<option value="<?php echo $rp->idPrograma ?>"><?php echo $rp->descripcion ?></option>	    			
-											    		<?php					
-										    		}		    		    			    
-										    		?>
-											</select>		                                    
-		                                </div>
+											<label>Programa</label>
+						                  <?php
+						                  echo form_error('programa');						                  						                 
+						                  $selected_value = $this->input->post('programa');
+						                  echo form_dropdown('programa', $resPrograma, $selected_value,'class="form-control"');
+						                  ?>
+						                </div>										
 									</div>
 									<div class="col-md-6 col-sm-6">										
 		                                <div class="form-group">
 		                                    <label>Experiencia Educativa</label>
-		                                    <select name="expedu" class="form-control">
-												 <?php						  
-												    foreach ($resExperiencia as $re) {				    	
-														?>  
-														<option value="<?php echo $re->idMateria ?>"><?php echo $re->nombre ?></option>	    			
-											    		<?php					
-										    		}		    		    			    
-										    		?>
-											</select>
+		                                    <?php
+							                  echo form_error('expedu');						                  						                 
+							                  $selected_value = $this->input->post('expedu');
+							                  echo form_dropdown('expedu', $resExperiencia, $selected_value,'class="form-control"');
+							                  ?>		                                    
 		                                </div>
 		                                <div class="form-group">
 		                                    <label>Periodo</label>
-		                                    <select name="periodo" class="form-control">
-												 <?php						  
-												    foreach ($resPeriodo as $rpe) {				    	
-														?>  
-														<option value="<?php echo $rpe->idPeriodo ?>"><?php echo $rpe->mesInicio ?> <?php echo substr($rpe->anoInicio, 0 , 4) ?>-<?php echo $rpe->mesTermino ?> <?php echo substr($rpe->anoTermino, 0 , 4) ?></option>	    			
-											    		<?php					
-										    		}		    		    			    
-										    		?>
-											</select>
+		                                    <?php
+							                  echo form_error('periodo');						                  						                 
+							                  $selected_value = $this->input->post('periodo');
+							                  echo form_dropdown('periodo', $resPeriodo, $selected_value,'class="form-control"');
+							                  ?>		                                    
 		                                </div>
 		                                <div class="form-group">
 		                                    <label>Tutor</label>
-		                                    <select name="tutor" class="form-control">
-												 <?php						  
-												    foreach ($resTutor as $rt) {				    	
-														?>  
-														<option value="<?php echo $rt->idAcademico ?>"><?php echo $rt->nombre ?> <?php echo $rt->apellidoPaterno ?> <?php echo $rt->apellidoMaterno ?></option>	    			
-											    		<?php					
-										    		}		    		    			    
-										    		?>
-											</select>
+		                                    <?php
+							                  echo form_error('tutor');						                  						                 
+							                  $selected_value = $this->input->post('tutor');
+							                  echo form_dropdown('tutor', $resTutor, $selected_value,'class="form-control"');
+							                  ?>
 		                                </div>
 		                                <div class="form-group">
 		                                    <label>Maestro con quien la cursó</label>
-		                                    <select name="curso" class="form-control">
-												 <?php						  
-												    foreach ($resMaestro as $rm) {				    	
-														?>  
-														<option value="<?php echo $rm->idAcademico ?>"><?php echo $rm->nombre ?> <?php echo $rm->apellidoPaterno ?> <?php echo $rm->apellidoMaterno ?></option>	    			
-											    		<?php					
-										    		}		    		    			    
-										    		?>
-											</select>
+		                                    <?php
+							                  echo form_error('curso');						                  						                 
+							                  $selected_value = $this->input->post('curso');
+							                  echo form_dropdown('curso', $resMaestro, $selected_value,'class="form-control"');
+							                ?>		                                    
 		                                </div>
 		                            </div>
 		                        </div>
@@ -117,7 +101,7 @@
 					                        <div class="panel-heading">
 					                            <div class="radio">
 													<label>
-													<input type="radio" name="optionsRadios" id="optionsRadios1" value="2" />
+													<input type="radio" name="modalidad" id="optionsRadios1" value="2" />
 													Oyente
 													</label>
 												</div>
@@ -139,7 +123,7 @@
 					                        <div class="panel-heading">
 					                            <div class="radio">
 													<label>
-													<input type="radio" name="optionsRadios" id="optionsRadios2" value="1" />
+													<input type="radio" name="modalidad" id="optionsRadios2" value="1" />
 													Condicionado
 													</label>
 												</div>
@@ -153,20 +137,23 @@
 					                </div>
 					            </div>   
 					            <div class="form-group">
+					            	<?php echo form_error('email'); ?>
 								    <label for="exampleInputEmail1">Correo electrónico</label>
-								    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" />
+								    <input type="email" class="form-control" id="exampleInputEmail1" name="email" value="<?php echo set_value('email'); ?>"/>
 								</div>                             															
 								<div class="form-group col-sm-6">
-								    <label for="exampleInputEmail1">Teléfono Casa</label>
-								    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" />
+								    <label for="exampleInputCasa">Teléfono Casa</label>
+								    <input type="text" class="form-control" name="casa" value="<?php echo set_value('casa'); ?>"/>
 								</div>
-								<div class="form-group col-sm-6">
-								    <label for="exampleInputEmail1">Teléfono Celular</label>
-								    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" />
+								<div class="form-group col-sm-6">							
+									<?php echo form_error('celular'); ?>		
+								    <label for="exampleInputCelular">Teléfono Celular</label>								    
+								    <input type="text" class="form-control" name="celular" value="<?php echo set_value('celular'); ?>"/>
 								</div>
 								<div class="checkbox">
 									<label>
-									<input type="checkbox" value="" />
+										<?php echo form_error('accept_terms_checkbox'); ?>
+									<input type="checkbox" name="accept_terms_checkbox" value="1" />
 									He leído y acepto los términos y condiciones
 									</label>
 								</div>																													
