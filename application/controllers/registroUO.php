@@ -30,13 +30,13 @@ class RegistroUO extends CI_Controller {
 		$data["resPeriodo"] = $this->alumnos_model->getPeriodo();
 	   	$this->load->library('form_validation');	   	
 		
-	   	$this->form_validation->set_rules('matricula','Correo','required|trim|xss_clean');
+	   	$this->form_validation->set_rules('matricula','Correo','required|trim|xss_clean|callback_check_alumno');
 	    $this->form_validation->set_rules('nombre','Nombre','required|trim|xss_clean');        
 	    $this->form_validation->set_rules('paterno','Apellido Paterno','required|trim|xss_clean');
 	    $this->form_validation->set_rules('materno','Apellido Materno','required|trim|xss_clean');
 	    $this->form_validation->set_rules('programa','Programa','required|trim|xss_clean');
 	    $this->form_validation->set_rules('expedu','Experiencia Educativa','required|trim|xss_clean');
-	    $this->form_validation->set_rules('periodo','Periodo','required|trim|xss_clean|callback_check_alumno');
+	    $this->form_validation->set_rules('periodo','Periodo','required|trim|xss_clean');
 	    $this->form_validation->set_rules('tutor','Tutor','required|trim|xss_clean');
 	    $this->form_validation->set_rules('curso','Maestro con quien curso','required|trim|xss_clean');
 	    $this->form_validation->set_rules('modalidad','Modalidad','required|trim|xss_clean');
@@ -92,21 +92,22 @@ class RegistroUO extends CI_Controller {
 	 }
 
 
-	function check_alumno($periodo)
+	function check_alumno()
 	{
 	   //consultar la base de datos
-		$mat = $this->input->post('matricula');
-		$idalumno = $periodo.$mat;
-	   $result = $this->alumnos_model->consulta_alumno($idalumno);
+		$periodo = $this->input->post('periodo');
+		 $mat = $this->input->post('matricula');
+		 $idalumno = $periodo.$mat;
 
-	   if($result)
-	   {
-	      return TRUE;      
-	   }
-	   else  { 
-	     $this->form_validation->set_message('check_alumno', 'El alumno ya esta registrado en una materia de UO dentro de este periodo, favor de pasar con la Sria. Académica');
-	     return FALSE;
-	   }
+        $result = $this->alumnos_model->consulta_alumno($idalumno);
+
+	   if($result == 0){
+            return TRUE;
+        } 
+        else {            
+            $this->form_validation->set_message('check_alumno', 'El alumno ya esta registrado en una materia de UO dentro de este periodo, favor de pasar con la Sria. Académica');
+	     	return FALSE;
+        }
 	}
 }
 

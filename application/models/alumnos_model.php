@@ -34,7 +34,8 @@ class Alumnos_model extends CI_Model
     }
 
     public function getExperiencia()
-    {   
+    {           
+        $this->db->order_by('programa', 'asc');                  
         $result = $this->db->get('materia');
         $return = array();
         if($result->num_rows() > 0){
@@ -95,14 +96,9 @@ class Alumnos_model extends CI_Model
 
     function consulta_alumno($idalumno)
     {      
-      $query = $this->db->get_where('fei_alumnosuo',array('a_clavealumno' => $idalumno));
-        if($query->num_rows() > 0 )
-        {
-            return false;
-        }
-        else{
-          return true;
-        }
+      $this->db->where('a_clavealumno', $idalumno);
+      $query = $this->db->get('fei_alumnosuo');        
+      return $query->num_rows();
     }
 
     function busca_user($usuario)
