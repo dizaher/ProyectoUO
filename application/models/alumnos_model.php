@@ -116,4 +116,36 @@ class Alumnos_model extends CI_Model
          return false;
        }
     }
+
+    function getAlumnos()
+    {
+        $query = $this->db->get('fei_alumnosuo');
+        if($query->num_rows()>0)
+        {
+            foreach ($query->result() as $fila)
+            {
+                $data[] = $fila;
+            }
+                return $data;
+        }
+    }
+    //obtenemos las localidades dependiendo de la provincia escogida
+    function getProvinciasSeleccionadas($provincia)
+    {
+        $query = $this->db->query('SELECT l.provincia,l.localidad,l.id,p.provincia 
+                                  from localidades_es l inner join provincias_es p
+                                  on l.provincia = p.id and p.id = '.$provincia);
+        $data["localidades"]=array();
+        if($query->num_rows()>0)
+        {
+        foreach ($query->result() as $fila)
+        {
+            $data["localidades"][$fila->id]["l.provincia"] = $fila->provincia;
+            $data["localidades"][$fila->id]["l.localidad"] = $fila->localidad;
+            $data["localidades"][$fila->id]["l.id"] = $fila->id;
+            $data["localidades"][$fila->id]["p.provincia"] = $fila->provincia;
+        }
+            return $data["localidades"];
+         }
+    }    
 }
