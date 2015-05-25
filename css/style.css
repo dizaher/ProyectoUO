@@ -295,7 +295,7 @@ footer {
     text-align: center;
     padding: 20px;
      margin-bottom: 40px;
-    border-left: 10px solid #262626;
+    /*border-left: 10px solid #262626;*/
 }
 
     .style-box-one a, .style-box-one a:hover {
@@ -309,11 +309,11 @@ footer {
     }
 
 .Style-one-clr-one {
-    background-color: #d96614;
+    background-color: #0080FF;
 }
 
 .Style-one-clr-two {
-    background-color: #2bbeb5;
+    background-color: #088A08;
 }
 
 .Style-one-clr-three {

@@ -54,7 +54,7 @@ class Admin extends CI_Controller {
 	          	$sess_array = array(
 	         	'cve_usuario' => $row->u_correo,
 	         	'nombre' => $row->u_nombre);
-	       		$this->session->set_userdata('logged_in', $sess_array);         
+	       		$this->session->set_userdata('logueado', $sess_array);         
 	        	return TRUE;  
 	        }
 	        else{
@@ -71,9 +71,9 @@ class Admin extends CI_Controller {
 
 	function principal()
 	 {		 
-	    if($this->session->userdata('logged_in'))
+	    if($this->session->userdata('logueado'))
 		{
-			$session_data = $this->session->userdata('logged_in');     
+			$session_data = $this->session->userdata('logueado');     
 			$data['nombre'] = $session_data['nombre']; 
 			$data['correo'] = $session_data['cve_usuario'];			
 						
