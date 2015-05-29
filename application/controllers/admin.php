@@ -86,6 +86,24 @@ class Admin extends CI_Controller {
 		}
 	 }
 
+	 public function users()
+	{		   
+		if($this->session->userdata('logueado'))
+		{			
+			$session_data = $this->session->userdata('logueado');	
+			$data['nombre'] = $session_data['nombre']; 
+			$data['correo'] = $session_data['cve_usuario'];	
+			$data['users'] = $this->usuarios_model->users();					
+			$this->load->view('Users/catusuarios_view',$data);
+		}		
+		else
+		{
+			//If no session, redirect to login page
+			redirect('c_ingreso', 'refresh');     
+		} 		
+	}
+
+
 	 function logout()
 	{	   
 		$this->session->sess_destroy();

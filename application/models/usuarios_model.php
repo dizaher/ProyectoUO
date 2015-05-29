@@ -22,5 +22,15 @@ class Usuarios_model extends CI_Model
         {
             return false;
         }
-    }    
+    }
+
+    function users(){        
+        $query = $this -> db -> get('fei_usuarios');
+        //$query = $this->db->get('toc_usuarios');
+        if($query->num_rows() > 0 )
+        {
+          return $query->result();
+        }
+    }
+
 }
