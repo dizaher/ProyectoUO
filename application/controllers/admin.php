@@ -5,6 +5,7 @@ class Admin extends CI_Controller {
 	{
 	   parent::__construct();	 
 	   $this->load->model('usuarios_model');	    	  
+	   $this->load->model('alumnos_model');
 	}
 
 	public function index()
@@ -75,9 +76,10 @@ class Admin extends CI_Controller {
 		{
 			$session_data = $this->session->userdata('logueado');     
 			$data['nombre'] = $session_data['nombre']; 
-			$data['correo'] = $session_data['cve_usuario'];			
-						
-			$this->load->view('administracion_principal_view', $data);        
+			$data['correo'] = $session_data['cve_usuario'];	
+
+			$data['contenido']='administracion_principal_view';
+			$this->load->view('template_view', $data);											   
 		} 
 		else
 		{
@@ -93,8 +95,9 @@ class Admin extends CI_Controller {
 			$session_data = $this->session->userdata('logueado');	
 			$data['nombre'] = $session_data['nombre']; 
 			$data['correo'] = $session_data['cve_usuario'];	
-			$data['users'] = $this->usuarios_model->users();					
-			$this->load->view('Users/catusuarios_view',$data);
+			$data['users'] = $this->usuarios_model->users();
+			$data['contenido']='Users/catusuarios_view';
+			$this->load->view('template_view', $data);			
 		}		
 		else
 		{
@@ -103,12 +106,31 @@ class Admin extends CI_Controller {
 		} 		
 	}
 
-
-	 function logout()
-	{	   
-		$this->session->sess_destroy();
-		redirect('c_principal', 'refresh');
+	public function registrados()
+	{		   
+		if($this->session->userdata('logueado'))
+		{			
+			$session_data = $this->session->userdata('logueado');	
+			$data['nombre'] = $session_data['nombre']; 
+			$data['correo'] = $session_data['cve_usuario'];	
+			$data['alumnos'] = $this->alumnos_model->alumnos();
+			foreach($data['alumnos'] as $al)
+            {
+            	$mtrocurso = $this->alumnos_model->search_mtro($al->a_idmtrocurso);
+            }
+            foreach ($mtrocurso as $mc) {
+            	$data['mcurso']= $mc->Curso;
+            }
+			$data['contenido']='UltimaOportunidad/registrados_view';
+			$this->load->view('template_view', $data);			
+		}		
+		else
+		{
+			//If no session, redirect to login page
+			redirect('c_ingreso', 'refresh');     
+		} 		
 	}
+
 }
 
 /* End of file welcome.php */

@@ -129,6 +129,40 @@ class Alumnos_model extends CI_Model
                 return $data;
         }
     }
+
+    function alumnos(){        
+        //$query = $this -> db -> get('fei_alumnosuo');        
+        $query = $this->db->query("SELECT fa.a_matricula, CONCAT( fa.a_nombre,  ' ', fa.a_paterno,  ' ', fa.a_materno ) AS Alumno, fa.a_idmtrocurso, programa.descripcion, materia.nombre, concat(academico.nombre,' ',academico.apellidoPaterno,' ',academico.apellidoMaterno) as Tutor, fei_modalidad.m_descripcion, fa.a_correo, fa.a_telcelular
+                                    FROM fei_alumnosuo fa
+                                    INNER JOIN programa ON fa.a_idcarrera = programa.idPrograma
+                                    INNER JOIN materia ON fa.a_idexperiencia = materia.idMateria
+                                    INNER JOIN academico ON fa.a_idtutor = academico.idAcademico
+                                    INNER JOIN fei_modalidad ON fa.a_idmodalidad = fei_modalidad.m_idmod");
+        if($query->num_rows() > 0 )
+        {
+          return $query->result();
+        }
+    }
+
+    function search_mtro($idmtro){        
+        //$query = $this -> db -> get('fei_alumnosuo');  
+        /*$this -> db -> select("concat(nombre,' ',apellidoPaterno,' ',apellidoMaterno) as Curso");
+       $this -> db -> from('academico');
+       $this -> db -> where('idAcademico', $idmtro);                      */
+       $query = $this->db->query("SELECT concat(academico.nombre,' ',academico.apellidoPaterno,' ',academico.apellidoMaterno) as Curso FROM academico where idAcademico=".$idmtro);
+       if($query -> num_rows() == 1)
+       {    
+         return $query->result();
+       }      
+       /* $query = $this->db->query("SELECT concat(academico.nombre,' ',academico.apellidoPaterno,' ',academico.apellidoMaterno) as Curso
+                                    FROM fei_alumnosuo fa, academico
+                                    where fa.a_idmtrocurso = academico.idAcademico");
+        if($query->num_rows() > 0 )
+        {
+          return $query->result();
+        }*/
+    }
+
     //obtenemos las localidades dependiendo de la provincia escogida
     function getProvinciasSeleccionadas($provincia)
     {

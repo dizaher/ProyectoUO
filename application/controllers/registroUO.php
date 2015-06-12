@@ -109,6 +109,12 @@ class RegistroUO extends CI_Controller {
 	     	return FALSE;
         }
 	}
+
+	function logout()
+	{    
+    	$this->session->sess_destroy();
+    	$this->load->view('ingresar_view');
+  	}
 }
 
 /* End of file welcome.php */
