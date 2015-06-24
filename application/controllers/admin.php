@@ -105,31 +105,107 @@ class Admin extends CI_Controller {
 			redirect('c_ingreso', 'refresh');     
 		} 		
 	}
+	
+	public function registrados($res = null) {				
+		if($this->session->userdata('logueado'))
+	    {
+	    	$data["resPrograma"] = $this->alumnos_model->getPrograma();						
+			$data["resExperiencia"] = $this->alumnos_model->getExperiencia();					
+			$data["resPeriodo"] = $this->alumnos_model->getPeriodo();
+			$data["resModalidad"] = $this->alumnos_model->getModalidad();
 
-	public function registrados()
+	    	$session_data = $this->session->userdata('logueado');	
+			$data['nombre'] = $session_data['nombre']; 
+			$data['correo'] = $session_data['cve_usuario'];
+	      	$data['results'] = $res;
+	      	$data['links'] = $res;
+	      	$data['contenido']='UltimaOportunidad/registrados_view';
+			$this->load->view('template_view', $data);    	      	
+	    }
+	    else
+	    {     
+	      	//If no session, redirect to login page
+			redirect('admin', 'refresh');
+	    }
+	}
+
+	public function consultaRegistrados()
 	{		   
 		if($this->session->userdata('logueado'))
-		{			
-			$session_data = $this->session->userdata('logueado');	
+	    {
+	  		$data["resPrograma"] = $this->alumnos_model->getPrograma();						
+			$data["resExperiencia"] = $this->alumnos_model->getExperiencia();					
+			$data["resPeriodo"] = $this->alumnos_model->getPeriodo();
+			$data["resModalidad"] = $this->alumnos_model->getModalidad();
+
+	    	$session_data = $this->session->userdata('logueado');	
 			$data['nombre'] = $session_data['nombre']; 
-			$data['correo'] = $session_data['cve_usuario'];	
-			$data['alumnos'] = $this->alumnos_model->alumnos();
-			foreach($data['alumnos'] as $al)
-            {
-            	$mtrocurso = $this->alumnos_model->search_mtro($al->a_idmtrocurso);
-            }
-            foreach ($mtrocurso as $mc) {
-            	$data['mcurso']= $mc->Curso;
-            }
-			$data['contenido']='UltimaOportunidad/registrados_view';
-			$this->load->view('template_view', $data);			
-		}		
-		else
-		{
-			//If no session, redirect to login page
-			redirect('c_ingreso', 'refresh');     
-		} 		
+			$data['correo'] = $session_data['cve_usuario'];
+
+			//si se apreto solo programa	  		      		
+			
+				$session_data = $this->session->set_flashdata('fechas',$postfecha);     	      	         
+			    $config = array();
+			    $config["base_url"] = base_url() . "index.php/c_calentador/reportefechas";
+			    $config["total_rows"] = $this->m_calentador->consultarNumDatos_cs($postfecha);
+			    $config["per_page"] = 20;
+			    $config["uri_segment"] = 3;
+			    $this->pagination->initialize($config);
+			    $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;		        			
+			    $data["results"] = $this->m_calentador->consultar_datos_cs($postfecha,$config["per_page"], $page);
+			    $data["links"] = $this->pagination->create_links();
+				$data['contenido']='Calentador/reportes_calentador_view';
+	        	$this->load->view("productosAdmin_view", $data);
+				      		      		
+
+        	//si se apreto programa y experiencia
+
+        	//si se apreto programa, experiencia y periodo
+
+        	//si se apreto programa, experiencia, periodo y modalidad
+		}
+	    else
+	    {     
+	      	//If no session, redirect to login page
+			redirect('admin', 'refresh');
+	    } 		
 	}
+
+	public function exportar_csv_oyentes()
+  	{    
+  		if($this->session->userdata('logueado'))
+	    {	    	
+	    	$this->load->dbutil();
+		    $this->load->helper('download');
+	    	$delimiter = ",";
+	    	$newline = "\r\n";
+	    	$query = $this->alumnos_model->get_alldatos_oyentes();   
+	    	$data = $this->dbutil->csv_from_result($query, $delimiter, $newline);
+	    	force_download('CSV_Report.csv', $data);     
+	    }
+	    else
+	    {     
+	      	$this->registrados();
+	    }
+  	}
+
+  	public function exportar_csv_condicionados()
+  	{    
+  		if($this->session->userdata('logueado'))
+	    {	    	
+	    	$this->load->dbutil();
+		    $this->load->helper('download');
+	    	$delimiter = ",";
+	    	$newline = "\r\n";
+	    	$query = $this->alumnos_model->get_alldatos_condicionados();   
+	    	$data = $this->dbutil->csv_from_result($query, $delimiter, $newline);
+	    	force_download('CSV_Report.csv', $data);     
+	    }
+	    else
+	    {     
+	      	redirect('c_ingreso', 'refresh');     
+	    }
+  	}
 
 }
 

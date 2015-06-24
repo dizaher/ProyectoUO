@@ -12,13 +12,26 @@ class Alumnos_model extends CI_Model
         $result = $this->db->get('programa');
         $return = array();
         if($result->num_rows() > 0){
-                $return[''] = 'Selecciona el Programa Educativo';
+                $return[''] = 'Selecciona el Programa';
             foreach($result->result_array() as $row){
                 $return[$row['idPrograma']] = $row['descripcion'];
             }
         }
         return $return;      
     }             
+
+    public function getModalidad()
+    {   
+        $result = $this->db->get('fei_modalidad');
+        $return = array();
+        if($result->num_rows() > 0){
+                $return[''] = 'Selecciona la Modalidad';
+            foreach($result->result_array() as $row){
+                $return[$row['m_idmod']] = $row['m_descripcion'];
+            }
+        }
+        return $return;      
+    }
 
     public function getTutor()
     {           
@@ -181,5 +194,17 @@ class Alumnos_model extends CI_Model
         }
             return $data["localidades"];
          }
-    }    
+    }
+
+    public function get_alldatos_oyentes()
+  {                   
+    $query = $this->db->query("select * from fei_alumnosuo where a_idmodalidad=2");    
+    return $query;
+  }    
+
+  public function get_alldatos_condicionados()
+  {                   
+    $query = $this->db->query("select * from fei_alumnosuo where a_idmodalidad=1");    
+    return $query;
+  }
 }
