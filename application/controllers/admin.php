@@ -6,6 +6,7 @@ class Admin extends CI_Controller {
 	   parent::__construct();	 
 	   $this->load->model('usuarios_model');	    	  
 	   $this->load->model('alumnos_model');
+	   $this->load->library("pagination");
 	}
 
 	public function index()
@@ -130,45 +131,36 @@ class Admin extends CI_Controller {
 	}
 
 	public function consultaRegistrados()
-	{		   
+	{					
 		if($this->session->userdata('logueado'))
-	    {
-	  		$data["resPrograma"] = $this->alumnos_model->getPrograma();						
+	    {	
+	    	$data["resPrograma"] = $this->alumnos_model->getPrograma();						
 			$data["resExperiencia"] = $this->alumnos_model->getExperiencia();					
 			$data["resPeriodo"] = $this->alumnos_model->getPeriodo();
 			$data["resModalidad"] = $this->alumnos_model->getModalidad();
-
-	    	$session_data = $this->session->userdata('logueado');	
-			$data['nombre'] = $session_data['nombre']; 
+			  		
+      		$session_data = $this->session->userdata('logueado');
+      		$data['nombre'] = $session_data['nombre']; 
 			$data['correo'] = $session_data['cve_usuario'];
-
-			//si se apreto solo programa	  		      		
+	      	$prog = $this->input->post('programa');
+	      	$session_data = $this->session->set_flashdata('programa',$prog);     	      	         
+		    $config = array();
+		    $config["base_url"] = base_url() . "index.php/admin/consultaRegistrados";
+		    $config["total_rows"] = $this->alumnos_model->consultarNumDatos($prog);
+		    $config["per_page"] = 20;
+		    $config["uri_segment"] = 3;
+		    $this->pagination->initialize($config);
+		    $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;		        			
+		    $data["results"] = $this->alumnos_model->consultar_datos($prog,$config["per_page"], $page);
+		    $data["links"] = $this->pagination->create_links();
+			$data['contenido']='UltimaOportunidad/registrados_view';
+        	$this->load->view("template_view", $data);
 			
-				$session_data = $this->session->set_flashdata('fechas',$postfecha);     	      	         
-			    $config = array();
-			    $config["base_url"] = base_url() . "index.php/c_calentador/reportefechas";
-			    $config["total_rows"] = $this->m_calentador->consultarNumDatos_cs($postfecha);
-			    $config["per_page"] = 20;
-			    $config["uri_segment"] = 3;
-			    $this->pagination->initialize($config);
-			    $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;		        			
-			    $data["results"] = $this->m_calentador->consultar_datos_cs($postfecha,$config["per_page"], $page);
-			    $data["links"] = $this->pagination->create_links();
-				$data['contenido']='Calentador/reportes_calentador_view';
-	        	$this->load->view("productosAdmin_view", $data);
-				      		      		
-
-        	//si se apreto programa y experiencia
-
-        	//si se apreto programa, experiencia y periodo
-
-        	//si se apreto programa, experiencia, periodo y modalidad
 		}
 	    else
 	    {     
-	      	//If no session, redirect to login page
-			redirect('admin', 'refresh');
-	    } 		
+	      	redirect('admin', 'refresh');     
+	    }	
 	}
 
 	public function exportar_csv_oyentes()

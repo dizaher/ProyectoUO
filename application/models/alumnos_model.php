@@ -9,12 +9,12 @@ class Alumnos_model extends CI_Model
     //insertamos un nuevo usuario en la tabla users
     public function getPrograma()
     {   
-        $result = $this->db->get('programa');
+        $result = $this->db->get('fei_programa');
         $return = array();
         if($result->num_rows() > 0){
                 $return[''] = 'Selecciona el Programa';
             foreach($result->result_array() as $row){
-                $return[$row['idPrograma']] = $row['descripcion'];
+                $return[$row['p_idprograma']] = $row['p_nombreprograma'];
             }
         }
         return $return;      
@@ -34,13 +34,14 @@ class Alumnos_model extends CI_Model
     }
 
     public function getTutor()
-    {           
-        $result = $this->db->get('academico');
+    {      
+        $this->db->order_by('a_apellidopaterno', 'asc');     
+        $result = $this->db->get('fei_academico');
         $return = array();
         if($result->num_rows() > 0){
                 $return[''] = 'Selecciona el nombre de tu tutor Académico';
             foreach($result->result_array() as $row){
-                $return[$row['idAcademico']] = $row['nombre'].' '.$row['apellidoPaterno'].' '.$row['apellidoMaterno'] ;                
+                $return[$row['a_numpersonal']] = $row['a_nombremtro'].' '.$row['a_apellidopaterno'].' '.$row['a_apellidomaterno'] ;                
             }
         }
         return $return;
@@ -48,13 +49,13 @@ class Alumnos_model extends CI_Model
 
     public function getExperiencia()
     {           
-        $this->db->order_by('programa', 'asc');                  
-        $result = $this->db->get('materia');
+        $this->db->order_by('p_idprograma', 'asc');                  
+        $result = $this->db->get('fei_experiencia');
         $return = array();
         if($result->num_rows() > 0){
                 $return[''] = 'Selecciona la Experiencia Educativa';
             foreach($result->result_array() as $row){
-                $return[$row['idMateria']] = $row['nombre'];
+                $return[$row['p_idmateria']] = $row['p_nombre'];
             }
         }
         return $return;
@@ -62,12 +63,13 @@ class Alumnos_model extends CI_Model
 
     public function getMaestro()
     {   
-        $result = $this->db->get('academico');
+        $this->db->order_by('a_apellidopaterno', 'asc');
+        $result = $this->db->get('fei_academico');
         $return = array();
         if($result->num_rows() > 0){
                 $return[''] = 'Selecciona el maestro con quien cursaste la materia';
             foreach($result->result_array() as $row){
-                $return[$row['idAcademico']] = $row['nombre'].' '.$row['apellidoPaterno'].' '.$row['apellidoMaterno'] ;                
+                $return[$row['a_numpersonal']] = $row['a_nombremtro'].' '.$row['a_apellidopaterno'].' '.$row['a_apellidomaterno'] ;                
             }
         }
         return $return;
@@ -75,12 +77,12 @@ class Alumnos_model extends CI_Model
 
     public function getPeriodo()
     {   
-        $result = $this->db->get('periodo');
+        $result = $this->db->get('fei_periodo');
         $return = array();
         if($result->num_rows() > 0){
                 $return[''] = 'Selecciona el periodo';
             foreach($result->result_array() as $row){
-                $return[$row['idPeriodo']] = $row['mesInicio'].' '.substr($row['anoInicio'], 0 , 4).'-'.$row['mesTermino'].' '.substr($row['anoTermino'], 0 , 4) ;                
+                $return[$row['p_idperiodo']] = $row['p_mesInicio'].' '.substr($row['p_anioInicio'], 0 , 4).'-'.$row['p_mesTermino'].' '.substr($row['p_anioTermino'], 0 , 4) ;                
             }
         }
         return $return;
@@ -175,26 +177,7 @@ class Alumnos_model extends CI_Model
           return $query->result();
         }*/
     }
-
-    //obtenemos las localidades dependiendo de la provincia escogida
-    function getProvinciasSeleccionadas($provincia)
-    {
-        $query = $this->db->query('SELECT l.provincia,l.localidad,l.id,p.provincia 
-                                  from localidades_es l inner join provincias_es p
-                                  on l.provincia = p.id and p.id = '.$provincia);
-        $data["localidades"]=array();
-        if($query->num_rows()>0)
-        {
-        foreach ($query->result() as $fila)
-        {
-            $data["localidades"][$fila->id]["l.provincia"] = $fila->provincia;
-            $data["localidades"][$fila->id]["l.localidad"] = $fila->localidad;
-            $data["localidades"][$fila->id]["l.id"] = $fila->id;
-            $data["localidades"][$fila->id]["p.provincia"] = $fila->provincia;
-        }
-            return $data["localidades"];
-         }
-    }
+    
 
     public function get_alldatos_oyentes()
   {                   
@@ -207,4 +190,30 @@ class Alumnos_model extends CI_Model
     $query = $this->db->query("select * from fei_alumnosuo where a_idmodalidad=1");    
     return $query;
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  function consultarNumDatos($prog)
+  {         
+      $this->db->where("a_idcarrera", $prog);
+      $cont = $this->db->count_all("fei_alumnosuo");
+      return $cont;
+  }
+
+  function consultar_datos($prog,$limit,$start)
+ {  
+    $this->db->from('fei_alumnosuo');
+    $this->db->where("a_idcarrera", $prog);    
+    $this->db->join('fei_modalidad', 'fei_modalidad.m_idmod = fei_alumnosuo.a_idmodalidad');    
+    $this->db->join('fei_experiencia', 'fei_experiencia.p_idmateria = fei_alumnosuo.a_idexperiencia');    
+    $this->db->join('fei_academico', 'fei_academico.a_numpersonal = fei_alumnosuo.a_idmtrocurso');    
+    $this->db->limit($limit, $start);
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        foreach ($query->result() as $row) {
+            $data[] = $row;
+        }
+        return $data;
+    }
+    return 0;          
+ }
 }

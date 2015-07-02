@@ -48,12 +48,12 @@
                 ?>                
               </div><!-- /.form group -->                                                                       
             </div>
-            <a href="<?php echo site_url('admin/principal') ?>" class="btn btn-primary"> Consultar</a>
+            <a href="<?php echo site_url('admin/consultaRegistrados') ?>" class="btn btn-primary"> Consultar</a>
 
               <div class="panel-group" id="accordion"> 
                 <?php
                   if ($results == null) {
-                    echo $results;
+                    echo "$results";
                   }
                   else{                                                         
                     ?>                                
@@ -63,8 +63,7 @@
                     <th>Matricula</th>
                     <th>Nombre de alumno</th>
                     <th>Carrera</th>                      
-                    <th>Experiencia</th>
-                    <th>Tutor</th>
+                    <th>Experiencia</th>                    
                     <th>Mtro con quien curso</th>
                     <th>Modalidad</th>
                     <th>Correo</th>
@@ -75,10 +74,10 @@
                     echo "No hay datos";
                   }
                   else{
-                    foreach($results as $data){ 
+                    foreach($results as $al){ 
                     {
                             echo '<tr>';
-                            echo '<td>'.$al->a_matricula.'</td><td>'.$al->Alumno.'</td><td>'.$al->descripcion.' </td><td>'.$al->nombre.'</td><td>'.$al->Tutor.'</td><td>'.$mcurso.'</td><td>'.$al->m_descripcion.'</td><td>'.$al->a_correo.'</td><td>'.$al->a_telcelular.'</td>';                     
+                            echo '<td>'.$al->a_matricula.'</td><td>'.$al->a_nombre.' '.$al->a_paterno.' '.$al->a_materno.'</td><td>'.$al->a_idcarrera.' </td><td>'.$al->p_nombre.'</td><td>'.$al->a_nombremtro.' '.$al->a_apellidopaterno.' '.$al->a_apellidomaterno.'</td><td>'.$al->m_descripcion.'</td><td>'.$al->a_correo.'</td><td>'.$al->a_telcelular.'</td>';                     
                             echo '</tr>';
                     }                                     
                   }
