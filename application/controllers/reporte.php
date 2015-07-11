@@ -7,13 +7,8 @@ class Reporte extends CI_Controller {
         $this->load->model('alumnos_model');
     }
     
-    public function index()
-    {        
-        //cargamos la vista 
-        $this->load->view('lanzarpdf');
-    }
-
-    public function generar() {
+    
+    public function index() {
         $this->load->library('Pdf');
         $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);                
         $pdf->SetTitle('H. CONSEJO TÉCNICO');
