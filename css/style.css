@@ -64,7 +64,7 @@ MIS ESTILOS
     line-height: 1;
     font-family: "Gill Sans Light","Segoe UI Light","Helvetica Neue","Gill Sans","Segoe UI",Arial;
     text-align: center;
-    margin-left: 30px;
+    margin-left: 30px;    
 }
 .nombre-dependencia h1 {
     font-weight: 100;
@@ -72,6 +72,7 @@ MIS ESTILOS
 .nombre-dependencia, 
 .nombre-dependencia a {
     color: #036;
+    text-decoration: none;
 }
 #NombreDependencia {
     margin-bottom: 20px;

@@ -47,8 +47,9 @@ class Alumnos_model extends CI_Model
         return $return;
     }
 
-    public function getExperiencia()
-    {           
+    public function getExperiencia($pro)
+    {   
+        $this->db->where('p_idprograma', $pro);        
         $this->db->order_by('p_idprograma', 'asc');                  
         $result = $this->db->get('fei_experiencia');
         $return = array();

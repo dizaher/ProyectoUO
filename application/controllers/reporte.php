@@ -15,7 +15,7 @@ class Reporte extends CI_Controller {
         $pdf->SetSubject('FACULTAD DE ESTADÍSTICA E INFORMÁTICA');        
 
 // datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config_alt.php de libraries/config        
-        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING, array(0, 0, 0), array(0, 0, 0));
+        /*$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING, array(0, 0, 0), array(0, 0, 0));
         $pdf->setFooterData($tc = array(0, 0, 0), $lc = array(0, 0, 0));
 
 // datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config.php de libraries/config
@@ -46,6 +46,7 @@ class Reporte extends CI_Controller {
 //Si tienes que imprimir carácteres ASCII estándar, puede utilizar las fuentes básicas como
 // Helvetica para reducir el tamaño del archivo.
         $pdf->SetFont('Helvetica', '', 12, '', true);
+        $pdf->Cell(40,10,'¡Hola, Mundo!');
 
 // Añadir una página
 // Este método tiene varias opciones, consulta la documentación para más información.
@@ -73,7 +74,10 @@ class Reporte extends CI_Controller {
 
 // Imprimimos el texto con writeHTMLCell()
         $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
-
+*/
+        $pdf->AddPage();
+$pdf->SetFont('Helvetica','B',12);
+$pdf->Cell(0,10,'¡Hola, Mundo!');
 // ---------------------------------------------------------
 // Cerrar el documento PDF y preparamos la salida
 // Este método tiene varias opciones, consulte la documentación para más información.

@@ -9,12 +9,35 @@ class RegistroUO extends CI_Controller {
 
 	public function index()
 	{
-		$data["resPrograma"] = $this->alumnos_model->getPrograma();		
-		$data["resTutor"] = $this->alumnos_model->getTutor();		
-		$data["resExperiencia"] = $this->alumnos_model->getExperiencia();		
-		$data["resMaestro"] = $this->alumnos_model->getMaestro();		
-		$data["resPeriodo"] = $this->alumnos_model->getPeriodo();					
-	  	$this->load->view('registrar_view', $data);
+		$data["resPrograma"] = $this->alumnos_model->getPrograma();						
+	  	$this->load->view('AlumnosUO/registrar_view', $data);
+	}
+
+	/**
+	FUNCIÓN PARA MOSTRAR SOLO LOS CAMPOS DEL PROGRAMA SELECCIONADO 
+	*/
+	public function formato()
+	{
+		//El método tiene la validación de credenciales o usuarios		
+	   	$this->load->library('form_validation');	   	
+		
+	   	$this->form_validation->set_rules('programa','Programa','required|trim|xss_clean');	         	    
+	    
+	    if($this->form_validation->run() == FALSE)
+	    {
+	       //Validación de campo fallado. Usuario redirigido a la página iniciar sesión	        	        				
+		  	$this->index();
+	    }
+	    else
+	    {
+	    	$pro = $this->input->post('programa');	
+			$data["resPrograma"] = $this->input->post('programa');	    	    	
+			$data["resTutor"] = $this->alumnos_model->getTutor();		
+			$data["resExperiencia"] = $this->alumnos_model->getExperiencia($pro);		
+			$data["resMaestro"] = $this->alumnos_model->getMaestro();		
+			$data["resPeriodo"] = $this->alumnos_model->getPeriodo();
+	        $this->load->view('AlumnosUO/formato_view', $data);	        
+	     }	  	
 	}
 
 	/**
@@ -23,9 +46,11 @@ class RegistroUO extends CI_Controller {
 	public function registro()
 	{
 	   	//El método tiene la validación de credenciales o usuarios
-		$data["resPrograma"] = $this->alumnos_model->getPrograma();		
+		//$data["resPrograma"] = $this->alumnos_model->getPrograma();
+		$pro = $this->input->post('programa');	
+		$data["resPrograma"] = $this->input->post('programa');	
 		$data["resTutor"] = $this->alumnos_model->getTutor();		
-		$data["resExperiencia"] = $this->alumnos_model->getExperiencia();		
+		$data["resExperiencia"] = $this->alumnos_model->getExperiencia($pro);		
 		$data["resMaestro"] = $this->alumnos_model->getMaestro();		
 		$data["resPeriodo"] = $this->alumnos_model->getPeriodo();
 	   	$this->load->library('form_validation');	   	
@@ -34,7 +59,7 @@ class RegistroUO extends CI_Controller {
 	    $this->form_validation->set_rules('nombre','Nombre','required|trim|xss_clean');        
 	    $this->form_validation->set_rules('paterno','Apellido Paterno','required|trim|xss_clean');
 	    $this->form_validation->set_rules('materno','Apellido Materno','required|trim|xss_clean');
-	    $this->form_validation->set_rules('programa','Programa','required|trim|xss_clean');
+	    //$this->form_validation->set_rules('programa','Programa','required|trim|xss_clean');
 	    $this->form_validation->set_rules('expedu','Experiencia Educativa','required|trim|xss_clean');
 	    $this->form_validation->set_rules('periodo','Periodo','required|trim|xss_clean');
 	    $this->form_validation->set_rules('tutor','Tutor','required|trim|xss_clean');
@@ -50,7 +75,8 @@ class RegistroUO extends CI_Controller {
 	    if($this->form_validation->run() == FALSE)
 	    {
 	       //Validación de campo fallado. Usuario redirigido a la página iniciar sesión	        	        				
-		  	$this->load->view('registrar_view', $data);
+
+		  	$this->load->view('AlumnosUO/formato_view', $data);
 	    }
 	    else
 	    {
@@ -72,7 +98,7 @@ class RegistroUO extends CI_Controller {
 	        $result = $this->alumnos_model->new_user($mat, $nom,$app,$apm,$pro,$ee,$pe,$tu,$cu,$mo,$em,$ca,$cel);//SE GUARDA EL USUARIO EN LA BASE DE DATOS 
 
 	        //***********************************************        	        
-	          $this->load->view('imprimir_registro_view');	        
+	          $this->load->view('AlumnosUO/imprimir_registro_view');	        
 	     }
 
 	 }
