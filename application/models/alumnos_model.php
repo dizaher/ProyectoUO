@@ -133,6 +133,25 @@ class Alumnos_model extends CI_Model
        }
     }
 
+    function busca_alumno($idalumno)
+    {       
+       $this -> db -> where('a_clavealumno', $idalumno);
+       $this->db->join('fei_programa', 'fei_programa.p_idprograma = fei_alumnosuo.a_idcarrera');          
+       $this->db->join('fei_experiencia', 'fei_experiencia.p_idmateria = fei_alumnosuo.a_idexperiencia');          
+       $this->db->join('fei_academico', 'fei_academico.a_numpersonal = fei_alumnosuo.a_idmtrocurso');          
+       $this->db->join('fei_periodo', 'fei_periodo.p_idperiodo = fei_alumnosuo.a_idperiodo');          
+       $this->db->join('fei_modalidad', 'fei_modalidad.m_idmod = fei_alumnosuo.a_idmodalidad');          
+       $query = $this -> db -> get('fei_alumnosuo');
+       if($query -> num_rows() == 1)
+       {    
+         return $query->result();
+       }
+       else
+       {
+         return false;
+       }
+    }
+
     function getAlumnos()
     {
         $query = $this->db->get('fei_alumnosuo');
